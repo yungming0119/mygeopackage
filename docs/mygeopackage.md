@@ -1,0 +1,4 @@
+ 
+# mygeopackage module
+
+::: mygeopackage.mygeopackage
