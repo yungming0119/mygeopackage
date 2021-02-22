@@ -12,7 +12,7 @@
     
 
 ## Features
-
+- Convert Numpy array to georeferenced rasters
 -   TODO
 
 ## Credits
