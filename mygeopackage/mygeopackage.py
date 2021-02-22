@@ -1,4 +1,5 @@
 """Main module."""
+from osgeo import ogr, osr, gdal
 def array2Raster(newRasterfn, rasterOrigin, pixelWidth, pixelHeight, array, epsg=3826):
     """"Convert a numpy array to a georeferenced raster
     newRasterfn: File name for output raster
