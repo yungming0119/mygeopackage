@@ -1,5 +1,5 @@
 """Main module."""
-from osgeo import ogr, osr, gdal
+#from osgeo import ogr, osr, gdal
 import json
 
 def array2Raster(newRasterfn, rasterOrigin, pixelWidth, pixelHeight, array, epsg=3826):
@@ -15,7 +15,7 @@ def array2Raster(newRasterfn, rasterOrigin, pixelWidth, pixelHeight, array, epsg
     rows = array.shape[0]
     originX = rasterOrigin[0]
     originY = rasterOrigin[1]
-
+"""
     driver = gdal.GetDriverByName('GTiff')
     outRaster = driver.Create(newRasterfn,cols,rows,1,gdal.GDT_Float32)
     outRaster.SetGeoTransform((originX,pixelWidth,0,originY,0,pixelHeight))
@@ -27,7 +27,7 @@ def array2Raster(newRasterfn, rasterOrigin, pixelWidth, pixelHeight, array, epsg
     outRaster.SetProjection(outRasterSRS.ExportToWkt())
     
     outBand.FlushCache()
-
+"""
 def geojson2shp(fili,filo):
     with open(fili) as f:
         geojson = json.load(f)
