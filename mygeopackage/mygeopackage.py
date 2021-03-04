@@ -1,5 +1,7 @@
 """Main module."""
 from osgeo import ogr, osr, gdal
+import json
+
 def array2Raster(newRasterfn, rasterOrigin, pixelWidth, pixelHeight, array, epsg=3826):
     """"Convert a numpy array to a georeferenced raster
     newRasterfn: File name for output raster
@@ -25,3 +27,9 @@ def array2Raster(newRasterfn, rasterOrigin, pixelWidth, pixelHeight, array, epsg
     outRaster.SetProjection(outRasterSRS.ExportToWkt())
     
     outBand.FlushCache()
+
+def geojson2shp(fili,filo):
+    with open(fili) as f:
+        geojson = json.load(f)
+        for feature in geojson['FeatureCollection']['features']:
+            pass
