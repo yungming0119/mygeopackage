@@ -1,3 +1,2 @@
 numpy
 scikit-learn
-GDAL==3.2.1
