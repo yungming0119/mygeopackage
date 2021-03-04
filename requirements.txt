@@ -1,2 +1,6 @@
 numpy
+<<<<<<< HEAD
 scikit-learn
+=======
+scikit-learn
+>>>>>>> cbf6497a4a4d776658458a2868063da3e126a4a0

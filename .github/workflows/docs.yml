@@ -17,7 +17,15 @@ jobs:
                   pip install --user --no-cache-dir Cython
                   pip install --user -r requirements.txt
                   pip install --user -r requirements_dev.txt
+<<<<<<< HEAD
                   sudo easy_install GDAL
+=======
+                  apt-get install gdal-bin
+                  apt-get install libgdal-dev
+                  export CPLUS_INCLUDE_PATH=/usr/include/gdal
+                  export C_INCLUDE_PATH=/usr/include/gdal
+                  pip install GDAL
+>>>>>>> cbf6497a4a4d776658458a2868063da3e126a4a0
             - name: PKG-TEST
               run: |
                   python -m unittest discover tests/
