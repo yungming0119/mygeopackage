@@ -17,7 +17,15 @@ jobs:
                   pip install --user --no-cache-dir Cython
                   pip install --user -r requirements.txt
                   pip install --user -r requirements_dev.txt
-
+                  sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
+                  virtualenv gdalenv
+                  source gdal/bin/activate
+                  sudo apt-get update
+                  sudo apt-get install libgdal-dev
+                  pip install --no-install GDAL
+                  cd /path/to/gdalenv/build/GDAL
+                  python setup.py build_ext --include-dirs=/usr/include/gdal/
+                  pip install --no-download GDAL
             - name: PKG-TEST
               run: |
                   python -m unittest discover tests/
