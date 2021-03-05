@@ -1,9 +1,12 @@
 """Main module."""
 #from osgeo import ogr, osr, gdal
-import rasterio
-from rasterio.crs import CRS
-from rasterio.transform import Affine
+#import rasterio
+#from rasterio.crs import CRS
+#from rasterio.transform import Affine
 import json
+
+def test():
+    print("mygeopackage installed!")
 
 def array2Raster(newRasterfn, rasterOrigin, pixelWidth, pixelHeight, array, epsg=3826):
     """"Convert a numpy array to a georeferenced raster
@@ -18,7 +21,7 @@ def array2Raster(newRasterfn, rasterOrigin, pixelWidth, pixelHeight, array, epsg
     rows = array.shape[0]
     originX = rasterOrigin[0]
     originY = rasterOrigin[1]
-
+"""
     transform = rasterio.transform.from_origin(originX,originY,pixelWidth,pixelHeight)
 
     with rasterio.open(
@@ -33,6 +36,7 @@ def array2Raster(newRasterfn, rasterOrigin, pixelWidth, pixelHeight, array, epsg
         transform=transform
     ) as dst:
         dst.write(array,1)
+"""
 """
     driver = gdal.GetDriverByName('GTiff')
     outRaster = driver.Create(newRasterfn,cols,rows,1,gdal.GDT_Float32)
