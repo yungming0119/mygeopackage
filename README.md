@@ -12,8 +12,8 @@
     
 
 ## Features
-- Convert Numpy array to georeferenced rasters
--   TODO
+- TODO: Convert Numpy array to georeferenced rasters
+- TODO: Convert Geojson to shapefile
 
 ## Credits
 
