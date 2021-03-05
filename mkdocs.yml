@@ -48,4 +48,4 @@ nav:
           - mygeopackage module: mygeopackage.md
     - Notebook:
           - ipyleaflet_intro: notebooks/ipyleaflet_intro.ipynb
-          - mygeopackage_intro: notebooks/mygeopackage_intro.ipynb
+          - mygeopackage_intro: notebooks/mygeopackage_demo.ipynb
