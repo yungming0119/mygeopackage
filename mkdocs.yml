@@ -23,7 +23,7 @@ plugins:
     - git-revision-date
     - mkdocs-jupyter:
           include_source: True
-          # execute: True
+          execute: True
           
 markdown_extensions:
     - attr_list
@@ -46,3 +46,5 @@ nav:
     - Report Issues: https://github.com/yungming0119/mygeopackage/issues
     - API Reference:
           - mygeopackage module: mygeopackage.md
+    - Notebook:
+          - ipyleaflet_intro: notebooks/ipyleaflet_intro.ipynb

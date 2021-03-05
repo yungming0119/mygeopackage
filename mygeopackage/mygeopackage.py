@@ -1,5 +1,8 @@
 """Main module."""
 #from osgeo import ogr, osr, gdal
+import rasterio
+from rasterio.crs import CRS
+from rasterio.transform import Affine
 import json
 
 def array2Raster(newRasterfn, rasterOrigin, pixelWidth, pixelHeight, array, epsg=3826):
@@ -15,6 +18,21 @@ def array2Raster(newRasterfn, rasterOrigin, pixelWidth, pixelHeight, array, epsg
     rows = array.shape[0]
     originX = rasterOrigin[0]
     originY = rasterOrigin[1]
+
+    transform = rasterio.transform.from_origin(originX,originY,pixelWidth,pixelHeight)
+
+    with rasterio.open(
+        newRasterfn,
+        'w',
+        driver='GTiff',
+        height=rows,
+        width=cols,
+        count=1,
+        dtype=rasterio.ubyte,
+        crs=CRS.from_epsg(epsg),
+        transform=transform
+    ) as dst:
+        dst.write(array,1)
 """
     driver = gdal.GetDriverByName('GTiff')
     outRaster = driver.Create(newRasterfn,cols,rows,1,gdal.GDT_Float32)

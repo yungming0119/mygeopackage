@@ -4,6 +4,10 @@
 [![image](https://img.shields.io/pypi/v/mygeopackage.svg)](https://pypi.python.org/pypi/mygeopackage)
 
 
+## Introduction
+
+This python package is designed for data mining in GIS. This package includes tools for basic GIS file operation like creating georeferenced raster from an array or converting GeoJson to shapefiles. This package also offers tools for geographic data mining and machine learning, like supervised machine learning, unsupervised machine learning and etc. 
+
 **Python package for gis application**
 
 
@@ -13,7 +17,11 @@
 
 ## Features
 
--   TODO
+-   Convert numpy array to georeferenced raster.
+-   TODO: Convert geojson to shp.
+-   TODO: Convert shp to geojson.
+-   TODO: Supervised machine learning: kNN, SVM
+-   TODO: Unsupervised machine learning: K-Means, DBSCAN
 
 ## Credits
 
