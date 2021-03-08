@@ -17,9 +17,14 @@ class Geo:
         self.toArray()
 
     def toArray(self):
-        if os.path.exists(self.uri) == False:
-            raise FileNotFoundError("Geojson file cannot be found.")
-        with open(self.uri) as f:
+
+        if os.path.exists('json_to_load.geojson') == False:
+            response = requests.get(self.uri)
+            with open('json_to_load.geojson','w') as f:
+                json_data = json.loads(response.text)
+                json.dump(json_data,f)
+
+        with open('json_to_load.geojson') as f:
             data = json.load(f)
             if data['crs'] != None:
                 crs = data['crs']['properties']['name']
