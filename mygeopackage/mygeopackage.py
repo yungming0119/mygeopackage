@@ -1,57 +1,72 @@
 """Main module."""
-#from osgeo import ogr, osr, gdal
-#import rasterio
-#from rasterio.crs import CRS
-#from rasterio.transform import Affine
 import json
+import os
+import requests
+import numpy as np
+import ipyleaflet
+from ipyleaflet import FullScreenControl, LayersControl, DrawControl, MeasureControl, ScaleControl, TileLayer
+class Geo:
+    uri = ""
+    crs = ""
+    attributes = []
+    data = []
 
-def test():
-    print("mygeopackage installed!")
+    def __init__(self,uri):
+        self.uri = uri
 
-def array2Raster(newRasterfn, rasterOrigin, pixelWidth, pixelHeight, array, epsg=3826):
-    """"Convert a numpy array to a georeferenced raster
-    newRasterfn: File name for output raster
-    rasterOrigin: GDAL transformation matrix for the original raster
-    pixelWidth: Width of the pixels
-    pixelHeight: Height of the pixels
-    epsg: The spatial reference for output raster. Default is 3826.
-    array: Numpy array that contains the raster cells.
-    """
-    cols = array.shape[1]
-    rows = array.shape[0]
-    originX = rasterOrigin[0]
-    originY = rasterOrigin[1]
-"""
-    transform = rasterio.transform.from_origin(originX,originY,pixelWidth,pixelHeight)
+        self.toArray()
 
-    with rasterio.open(
-        newRasterfn,
-        'w',
-        driver='GTiff',
-        height=rows,
-        width=cols,
-        count=1,
-        dtype=rasterio.ubyte,
-        crs=CRS.from_epsg(epsg),
-        transform=transform
-    ) as dst:
-        dst.write(array,1)
-"""
-"""
-    driver = gdal.GetDriverByName('GTiff')
-    outRaster = driver.Create(newRasterfn,cols,rows,1,gdal.GDT_Float32)
-    outRaster.SetGeoTransform((originX,pixelWidth,0,originY,0,pixelHeight))
-    outBand = outRaster.GetRasterBand(1)
-    outBand.WriteArray(array)
+    def toArray(self):
+        if os.path.exists(self.uri) == False:
+            raise FileNotFoundError("Geojson file cannot be found.")
+        with open(self.uri) as f:
+            data = json.load(f)
+            if data['crs'] != None:
+                crs = data['crs']['properties']['name']
+                self.crs = crs
+            fields = list(data['features'][0]['properties'].keys())
+            arr_list = []
+            for feature in data['features']:
+                arr_list.append((feature['geometry']['coordinates'][0],feature['geometry']['coordinates'][1],*list(feature['properties'].values())))
+            arr = np.array(arr_list)
+            
+            self.attributes = fields
+            self.data = arr
+        
 
-    outRasterSRS = osr.SpatialReference()
-    outRasterSRS.ImportFromEPSG(epsg)
-    outRaster.SetProjection(outRasterSRS.ExportToWkt())
-    
-    outBand.FlushCache()
-"""
-def geojson2shp(fili,filo):
-    with open(fili) as f:
-        geojson = json.load(f)
-        for feature in geojson['FeatureCollection']['features']:
-            pass
+class Map(ipyleaflet.Map):
+    def __init__(self,**kwargs):
+        if "center" not in kwargs:
+            kwargs["center"] = [40,-100]
+        if "zoom" not in kwargs:
+            kwargs['zoom'] = 4
+        if "scroll_wheel_zoom" not in kwargs:
+            kwargs["scroll_wheel_zoom"] = True
+
+        super().__init__(**kwargs)
+
+        if "height" not in kwargs:
+            self.layout.height = "600px"
+        else:
+            self.layout.height = kwargs['height']
+
+        self.add_control(FullScreenControl())
+        self.add_control(LayersControl(position="topright"))
+        self.add_control(DrawControl(position="topleft"))
+        self.add_control(MeasureControl())
+        self.add_control(ScaleControl(position="bottomleft"))
+
+        if "google_map" not in kwargs or kwargs["google_map"] == "ROADMAP":
+            layer = TileLayer(
+                url="https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}",
+                attribution="Google",
+                name="Google Maps"
+            )
+            self.add_layer(layer)
+        elif kwargs["google_map"] == "HYBRID":
+            layer = TileLayer(
+                url="https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}",
+                attribution="Google",
+                name="Google Satellite"
+            )
+            self.add_layer(layer)
