@@ -1,6 +1,4 @@
 numpy
 scikit-learn
-rasterio
-pyshp
 ipyleaflet
 folium
