@@ -17,7 +17,9 @@ This python package is designed for data mining in GIS. This package includes to
 
 ## Features
 
--   Convert numpy array to georeferenced raster.
+-   Convert geojson to numpy array
+-   interactive web map using ipyleaflet
+-   TODO: Convert numpy array to georeferenced raster.
 -   TODO: Convert geojson to shp.
 -   TODO: Convert shp to geojson.
 -   TODO: Supervised machine learning: kNN, SVM
