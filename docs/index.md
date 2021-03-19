@@ -12,6 +12,7 @@ This python package is designed for data mining in GIS. This package includes to
 
 
 -   Free software: MIT license
+-   Github repo: <https://github.com/yungming0119/mygeopackage>
 -   Documentation: <https://yungming0119.github.io/mygeopackage>
     
 
@@ -19,11 +20,13 @@ This python package is designed for data mining in GIS. This package includes to
 
 -   Convert geojson to numpy array
 -   interactive web map using ipyleaflet
+-   Data preprocessing: Standardized normalization
+-   Unsupervised machine learning: K-Means
 -   TODO: Convert numpy array to georeferenced raster.
 -   TODO: Convert geojson to shp.
 -   TODO: Convert shp to geojson.
 -   TODO: Supervised machine learning: kNN, SVM
--   TODO: Unsupervised machine learning: K-Means, DBSCAN
+-   TODO: Unsupervised machine learning: DBSCAN
 
 ## Credits
 

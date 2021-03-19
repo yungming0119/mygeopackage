@@ -47,5 +47,7 @@ nav:
     - API Reference:
           - mygeopackage module: mygeopackage.md
     - Notebook:
-          - ipyleaflet_intro: notebooks/ipyleaflet_intro.ipynb
-          - mygeopackage_intro: notebooks/mygeopackage_demo.ipynb
+          - Introduction to mygeopackage: notebooks/intro.ipynb
+          - Main module: notebooks/Main_Module.ipynb
+          - Data preprocessing module: notebooks/Data_Preprocessing_Module.ipynb
+          - Unsupervised machine learning module: notebooks/unsupervised_learning.ipynb

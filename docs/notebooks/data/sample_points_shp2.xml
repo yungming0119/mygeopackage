@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata xml:lang="zh"><Esri><CreaDate>20210318</CreaDate><CreaTime>17150400</CreaTime><ArcGISFormat>1.0</ArcGISFormat><SyncOnce>TRUE</SyncOnce><DataProperties><lineage><Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Conversion Tools.tbx\JSONToFeatures" Date="20210318" Time="171504">JSONToFeatures C:\Users\r1111\mygeopackage\docs\notebooks\data\sample_points.geojson C:\Users\r1111\mygeopackage\docs\notebooks\data\sample_points.shp Point</Process></lineage></DataProperties></Esri></metadata>
