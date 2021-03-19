@@ -47,7 +47,7 @@ nav:
     - API Reference:
           - mygeopackage module: mygeopackage.md
     - Notebook:
-          - Introduction to mygeopackage: notebooks/intro.ipynb
+          - Introduction to mygeopackage: notebooks/Intro.ipynb
           - Main module: notebooks/Main_Module.ipynb
           - Data preprocessing module: notebooks/Data_Preprocessing_Module.ipynb
           - Unsupervised machine learning module: notebooks/unsupervised_learning.ipynb
