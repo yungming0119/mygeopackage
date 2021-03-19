@@ -46,6 +46,9 @@ nav:
     - Report Issues: https://github.com/yungming0119/mygeopackage/issues
     - API Reference:
           - mygeopackage module: mygeopackage.md
+          - data preprocessing module: data_preprocessing.md
+          - unsupervised machine learning module: unsupervised.md
+          - utility module: utility.md
     - Notebook:
           - Introduction to mygeopackage: notebooks/Intro.ipynb
           - Main module: notebooks/Main_Module.ipynb
