@@ -2,6 +2,6 @@
 
 __author__ = """Yung-Ming Tsai"""
 __email__ = 'ytsai5@vols.utk.edu'
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 
 from .mygeopackage import *
