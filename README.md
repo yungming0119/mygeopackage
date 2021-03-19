@@ -18,7 +18,10 @@ This python package is designed for data mining in GIS. This package includes to
 ## Features
 
 -   Convert geojson to numpy array
--   interactive webmap using ipyleaflet
+-   Convert Shp to numpy array
+-   interactive webmap using ipyleaflet & Folium
+-   Data preprocessing: Standarized normalization
+-   Unsupervised machine learning: K-Means
 -   TODO: Convert numpy array to georeferenced raster.
 -   TODO: Convert geojson to shp.
 -   TODO: Convert shp to geojson.
