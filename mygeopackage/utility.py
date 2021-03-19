@@ -1,3 +1,5 @@
+"""Utility module."""
+
 def rgb_to_hex(color):
     """Helper function for converting RGB color to hex code
 

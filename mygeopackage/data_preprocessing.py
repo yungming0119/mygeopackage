@@ -1,3 +1,5 @@
+"""Data preprocessing module."""
+
 from mygeopackage import *
 from sklearn import preprocessing
 import numpy as np

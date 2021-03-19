@@ -1,3 +1,5 @@
+"""Unsupervised machine learning module."""
+
 from mygeopackage import *
 from mygeopackage.utility import rgb_to_hex
 import numpy as np
