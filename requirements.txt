@@ -4,3 +4,4 @@ ipyleaflet
 folium
 pyshp
 whitebox
+ipyfilechooser
