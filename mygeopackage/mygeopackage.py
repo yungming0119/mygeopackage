@@ -5,9 +5,10 @@ import requests
 import numpy as np
 import shapefile
 import ipyleaflet
-from ipyleaflet import FullScreenControl, LayersControl, DrawControl, MeasureControl, ScaleControl, TileLayer
+from ipyleaflet import FullScreenControl, LayersControl, DrawControl, MeasureControl, ScaleControl, TileLayer, GeoJSON
 import folium
 from IPython.display import display
+from .toolbar import main_toolbar
 class Geo:
     uri = ""
     crs = ""
@@ -74,7 +75,7 @@ class Geo:
             self.uri = r'data/json_to_load_from_shp.geojson'
             self.GeojsonToArray(request=False)
 
-    def show(self, map=None, top = 0):
+    def show(self, map=None, top = 0, kernel = 'folium'):
         """Draw the class object on the map with Folium.
 
         Args:
@@ -87,13 +88,29 @@ class Geo:
             data = self.data
         if map == None:
 
-            m = folium.Map(location=[data[0][1],data[0][0]])
-            for record in data:
-                folium.Marker([record[1],record[0]]).add_to(m)
-            display(m)
+            if kernel == 'folium':
+                m = folium.Map(location=[data[0][1],data[0][0]])
+                for record in data:
+                    folium.Marker([record[1],record[0]]).add_to(m)
+                display(m)
+            if kernel == 'ipyleaflet':
+                m = ipyleaflet.Map(center=[data[0][1],data[0][0]])
+                markers = []
+                for record in data:
+                    marker = ipyleaflet.Marker(location=([record[1],record[0]]))
+                    markers.append(marker)
+                layer_group = ipyleaflet.LayerGroup(layers=(markers))
+                m.add_layer(layer_group)
         else:
+            markers = []
             for record in data:
-                folium.Marker([record[1],record[0]]).add_to(map)
+                if kernel == 'folium':
+                    folium.Marker([record[1],record[0]]).add_to(map)
+                if kernel == 'ipyleaflet':
+                    marker = ipyleaflet.Marker(location=([record[1],record[0]]))
+                    markers.append(marker)
+            layer_group = ipyleaflet.LayerGroup(layers=(markers))
+            map.add_layer(layer_group)
 
 
 class Map(ipyleaflet.Map):
@@ -113,10 +130,12 @@ class Map(ipyleaflet.Map):
             self.layout.height = kwargs['height']
 
         self.add_control(FullScreenControl())
-        self.add_control(LayersControl(position="topright"))
+        self.add_control(LayersControl(position="bottomright"))
         self.add_control(DrawControl(position="topleft"))
         self.add_control(MeasureControl())
         self.add_control(ScaleControl(position="bottomleft"))
+
+        main_toolbar(self)
 
         if "google_map" not in kwargs or kwargs["google_map"] == "ROADMAP":
             layer = TileLayer(
@@ -132,3 +151,4 @@ class Map(ipyleaflet.Map):
                 name="Google Satellite"
             )
             self.add_layer(layer)
+    

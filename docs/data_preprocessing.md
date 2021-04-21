@@ -1,3 +1,3 @@
 # data preprocessing module
 
-::: mygeopackage.data_preprocessing
+::: mygeopackage.pproc
