@@ -8,7 +8,7 @@ class Test_unsupervised(unittest.TestCase):
     def setUp(self):
         """Set up test fixtures, if any."""
         print('Setup.')
-        self.in_geojson = os.path.abspath(r'docs\notebooks\data\sample_points.geojson')
+        self.in_geojson = os.path.abspath(r'docs/notebooks/data/sample_points.geojson')
         self.geo = mygeopackage.Geo(self.in_geojson,request=False)
         self.cluster_results = mygeopackage.unsupervised.Cluster(self.geo.data[0:100])
 

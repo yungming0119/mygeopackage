@@ -16,8 +16,8 @@ class TestMygeopackage(unittest.TestCase):
     def setUp(self):
         """Set up test fixtures, if any."""
         print('Setup.')
-        self.in_geojson = r'docs\notebooks\data\sample_points.geojson'
-        self.in_shp = r'docs\notebooks\data\sample_points_shp2.shp'
+        self.in_geojson = r'docs/notebooks/data/sample_points.geojson'
+        self.in_shp = r'docs/notebooks/data/sample_points_shp2.shp'
 
 
     def tearDown(self):
