@@ -57,3 +57,4 @@ nav:
           - Unsupervised machine learning module: notebooks/unsupervised_learning.ipynb
           - Regression module: notebooks/regression.ipynb
           - Interactive Web Map: notebooks/interactive_web_map.ipynb
+          - GUI: notebooks/GUI.ipynb

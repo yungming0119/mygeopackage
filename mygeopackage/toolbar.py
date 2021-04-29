@@ -4,6 +4,7 @@ from ipyleaflet import WidgetControl, basemaps
 from ipyfilechooser import FileChooser
 from IPython.display import display
 import mygeopackage
+import folium
 
 def main_toolbar(m):
 
@@ -145,3 +146,123 @@ def main_toolbar(m):
         for j in range(cols):
             tool = grid[i, j]
             tool.on_click(tool_click)
+
+def ml_tool():
+
+    #Read Data
+    data_dir = os.path.abspath('./data')
+
+    fc = FileChooser(data_dir)
+    fc.use_dir_icons = True
+    fc.filter_pattern = ['*.shp', '*.geojson']
+
+    button = widgets.Button(description='Read Data')
+    def button_click(change):
+        m = folium.Map(zoom_start=15)
+        geo = []
+
+        if fc.selected is not None:
+            if fc.selected.endswith(".shp"):
+                geo = mygeopackage.Geo(fc.selected,request=False,file_type='shp')
+                #geo.show(map=m)
+            elif fc.selected.endswith(".geojson"):
+                geo = mygeopackage.Geo(fc.selected,request=False)
+                #geo.show(map=m)
+        analysis(m,geo)
+        #display(m)
+
+    button.on_click(button_click)     
+    filechooser_widget = widgets.VBox([fc, button])
+    display(filechooser_widget)
+
+def analysis(m,geo):
+    #Data Preprocessing
+    field_select = widgets.Select(
+        options = list(zip(geo.attributes,range(2,len(geo.attributes)+2))),
+        description = "fields"
+    )
+    lr_button = widgets.Button(description='Apply')
+    lr_tool = widgets.HBox([field_select,lr_button])
+    lr_area = widgets.VBox([widgets.Label(value='Standardized Normalization'),lr_tool])
+
+    def lr_click(change):
+        if field_select.value is not None:
+            import mygeopackage.pproc
+            mygeopackage.pproc.standardNormalization(geo,field_select.value)
+            print(geo.data[:,field_select.value])
+    lr_button.on_click(lr_click)
+
+    #Unsupervised Machine Learning
+    style = {'description_width': 'initial'}
+    n_text = widgets.IntText(value=2,description='Desired Clusters',style=style)
+    field_multiple = widgets.SelectMultiple(
+        options = list(zip(['X','Y',*geo.attributes],range(0,len(geo.attributes)+2))),
+        description = "Fields"
+    )
+    index_field = widgets.Select(
+        options = list(zip(geo.attributes,range(2,len(geo.attributes)+2))),
+        description = "Identifier"
+    )
+    k_means_button = widgets.Button(description='Apply')
+    k_means_tool = widgets.HBox([n_text,field_multiple,index_field])
+    k_means_area = widgets.VBox([widgets.Label(description='K_Means'),k_means_tool,k_means_button])
+
+    def k_means_click(change):
+        
+        import mygeopackage.unsupervised
+        if field_multiple.value is not None:
+            clusters = mygeopackage.unsupervised.Cluster(geo.data)
+            mygeopackage.unsupervised.k_means(n_text.value,field_multiple.value,clusters,index_field.value)
+            clusters.show(map=m)
+
+    k_means_button.on_click(k_means_click)
+
+    eps_text = widgets.Text(value='0.5',description="EPS")
+    min_samples = widgets.IntText(value=5,description="Min_Samples")
+    dbscan_button = widgets.Button(description="Apply")
+    dbscan_tool = widgets.HBox([eps_text,min_samples,field_multiple,index_field])
+    dbscan_area = widgets.VBox([widgets.Label(description="DBSCAN"),dbscan_tool,dbscan_button])
+
+    def dbscan_click(change):
+        import mygeopackage.unsupervised
+        if field_multiple.value is not None:
+            clusters = mygeopackage.unsupervised.Cluster(geo.data)
+            mygeopackage.unsupervised.dbscan(float(eps_text.value),min_samples.value,field_multiple.value,clusters,index_field.value)
+            clusters.show(map=m)
+
+    dbscan_button.on_click(dbscan_click)
+    accordion = widgets.Accordion(children=[k_means_area,dbscan_area])
+    accordion.set_title(0,'K Means')
+    accordion.set_title(1,'DBSCAN')
+    #Regression
+    dependent_field = widgets.Select(
+        options = list(zip(['X','Y',*geo.attributes],range(0,len(geo.attributes)+2))),
+        description = "Dependent Variable",
+        style = style
+    )
+    independent_fields = widgets.SelectMultiple(
+        options = list(zip(['X','Y',*geo.attributes],range(0,len(geo.attributes)+2))),
+        description = "Independent Variable",
+        style=style
+    )
+    regression_button = widgets.Button(description="Apply")
+    regression_tool = widgets.HBox([dependent_field,independent_fields,index_field])
+    regression_area = widgets.VBox([widgets.Label(description="Ordinary Least Square"),regression_tool,regression_button])
+    
+    def regression_click(change):
+        import mygeopackage.regression
+        if dependent_field.value is not None:
+            reg_results = mygeopackage.regression.Regression()
+            reg_results = mygeopackage.regression.ols(geo,dependent_field.value,independent_fields.value,index_field.value)
+            reg_results.show(map=m)
+            print('R2 Score: '+ str(reg_results.score))
+
+    regression_button.on_click(regression_click)
+
+    tab = widgets.Tab()
+    tab_contents = ['Data Preprocessing','Unsupervised','Regression']
+    tab.set_title(0,'Data Preprocessing')
+    tab.set_title(1,'Unsupervised')
+    tab.set_title(2,'Regression')
+    tab.children = [lr_area,accordion,regression_area]
+    display(tab)

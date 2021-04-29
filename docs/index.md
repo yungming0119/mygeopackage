@@ -6,7 +6,11 @@
 
 ## Introduction
 
-This python package is designed for data mining in GIS. This package includes tools for basic GIS file operation like creating georeferenced raster from an array or converting GeoJson to shapefiles. This package also offers tools for geographic data mining and machine learning, like supervised machine learning, unsupervised machine learning and etc. 
+Mygeopackage is designed for data mining and machine learning in GIS. The package provides basic tools to deal with common spatial data like GeoJSON or ESRI shapefile, and also tools to perform data processing and machine learning.
+
+The package is based on Scikit-Learn module. Currently, the package supports three modules: data preprocessing, unsupervised machine learning and data mining.
+
+The package also offers the functionality of interactive web map and GUI interface. The GUI interface is good for exploring spatial data and experiment on machine learning algorithms.
 
 **Python package for gis application**
 
@@ -18,15 +22,12 @@ This python package is designed for data mining in GIS. This package includes to
 
 ## Features
 
--   Convert geojson to numpy array
--   interactive web map using ipyleaflet
+-   Convert geojson and ESRI shapefile to numpy array
+-   Interactive web map using ipyleaflet
 -   Data preprocessing: Standardized normalization
--   Unsupervised machine learning: K-Means
--   TODO: Convert numpy array to georeferenced raster.
--   TODO: Convert geojson to shp.
--   TODO: Convert shp to geojson.
--   TODO: Supervised machine learning: kNN, SVM
--   TODO: Unsupervised machine learning: DBSCAN
+-   Unsupervised machine learning: K-Means, DBSCAN
+-   Regression Analyis: OLS
+-   GUI interface for Jupyter Notebook 
 
 ## Credits
 

@@ -1,10 +1,10 @@
 """Data preprocessing module."""
 
-from mygeopackage import *
+import mygeopackage
 from sklearn import preprocessing
 import numpy as np
 
-def standardNormalization(geo: type(Geo),field_index):
+def standardNormalization(geo: type(mygeopackage.Geo),field_index):
     """Standard Normalized a field in the dataset.
 
     Args:
@@ -14,7 +14,7 @@ def standardNormalization(geo: type(Geo),field_index):
     Raises:
         TypeError: [description]
     """
-    if not isinstance(geo,Geo):
+    if not isinstance(geo,mygeopackage.Geo):
         raise TypeError
     scaler = preprocessing.StandardScaler()
     #print(geo.data[:,field_index])
