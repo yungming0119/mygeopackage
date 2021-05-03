@@ -1,6 +1,7 @@
 """Main module."""
 import json
 import os
+import csv
 import requests
 import numpy as np
 import shapefile
@@ -15,19 +16,25 @@ class Geo:
     attributes = []
     data = []
 
-    def __init__(self,uri,request=True,file_type='geojson'):
+    def __init__(self,uri,request=True,x=None,y=None,header=False,output_geojson=None,file_type='geojson'):
         """Instantiate the GEO object.
 
         Args:
             uri (string): Local or online URI for GeoJson data.
             request (bool, optional): If set to true, the program will request the data online from the given URL, and save it in local folder. Defaults to True.
             file_type (str, optional): If the value is set to 'geojson', then the function will call GeoJsonToArray(). If the value is set to 'shp', then the function will call ShpToArray(). Defaults to 'geojson'.
+            x (str, optional): Field name for X in csv.
+            y (str, optional): Field name for Y in csv.
+            header (bool, optional): Whether csv file contains a header. Defaults to True.
+            output_geojson (str,optional): File path to output geojson for csv.
         """
         self.uri = uri
         if file_type == 'geojson':
             self.GeojsonToArray(request)
         if file_type == 'shp':
             self.ShpToArray()
+        if file_type == 'csv':
+            self.CsvToArray(x,y,header,output_geojson)
 
     def GeojsonToArray(self,request=True):
         """Convert GeoJson data to numpy array.
@@ -75,6 +82,67 @@ class Geo:
             self.uri = r'data/json_to_load_from_shp.geojson'
             self.GeojsonToArray(request=False)
 
+    def CsvToArray(self,x,y,header,output_geojson=None):
+        """Convert Csv to array.
+
+        Args:
+            x (str): Field name for X in csv.
+            y (str): Field name for Y in csv.
+            header (bool, optional): Whether csv file contains a header. Defaults to True.
+            output_geojson (str,optional): File path to output geojson for csv. Defaults to None.
+        """
+        with open(self.uri,'r',encoding='utf8') as csvfile:
+            reader = csv.reader(csvfile,delimiter=',')
+            i = 0
+            geojson = dict()
+            geojson['type'] = 'FeatureCollection'
+            geojson['features'] = []
+            for row in reader:
+                if i == 0:
+                    if header == True:
+                        fields = row
+                        x_index = fields.index(x)
+                        y_index = fields.index(y)
+                    else:
+                        fields = ['Field_'+ str(i) for i in range(len(row))+1]
+                    i += 1
+                else:
+                    record = dict()
+                    record['type'] = 'Feature'
+                    record['properties'] = dict(zip(fields,row))
+                    record['geometry'] = dict()
+                    record['geometry']['type'] = 'Point'
+                    record['geometry']['coordinates'] = [row[x_index],row[y_index]]
+                    geojson['features'].append(record)
+
+            
+            if os.path.exists(r'data/json_to_load_from_csv.geojson') == True:
+                os.remove(r'data/json_to_load_from_csv.geojson')
+            with open(r'data/json_to_load_from_csv.geojson','w') as f:                
+                json.dump(geojson,f)
+            
+            if output_geojson is not None:
+                with open(output_geojson,'w') as f:
+                    json.dump(output_geojson,f)
+            self.uri = r'data/json_to_load_from_csv.geojson'
+            self.GeojsonToArray(request=False)
+        
+    def ToShp(self,out):
+        """Convert Geo class to shapefile.
+
+        Args:
+            out (str): File path to save shp.
+        """
+        w = shapefile.Writer(out)
+        for field in self.attributes:
+            w.field(field,'C')
+        for row in self.data:
+            w.record(row[2:])
+            w.point(float(row[0]),float(row[1]))
+        
+        w.close()
+
+
     def show(self, map=None, top = 0, kernel = 'folium'):
         """Draw the class object on the map with Folium.
 
@@ -115,6 +183,8 @@ class Geo:
 
 class Map(ipyleaflet.Map):
     def __init__(self,**kwargs):
+        """Map class
+        """
         if "center" not in kwargs:
             kwargs["center"] = [40,-100]
         if "zoom" not in kwargs:
@@ -152,3 +222,34 @@ class Map(ipyleaflet.Map):
             )
             self.add_layer(layer)
     
+        if 'in_csv' in kwargs:
+            in_csv = kwargs['in_csv']
+            x = kwargs['x']
+            y = kwargs['y']
+            header = kwargs['header']
+            self.add_points_from_csv(in_csv,x,y,header)
+
+    def add_points_from_csv(self,in_csv,x,y,header):
+        """[summary]
+
+        Args:
+            in_csv (str): File path to csv file.
+            x (str): Field name for X in csv.
+            y (str): Field name for Y in csv.
+            header (bool, optional): Whether csv file contains a header. Defaults to True.
+        """
+        with open(in_csv,encoding='utf8') as csvfile:
+            reader = csv.reader(csvfile,delimiter=',')
+            i = 0
+            markers = []
+            for row in reader:
+                if i == 0:
+                    if header == True:
+                        fields = row
+                        x_index = fields.index(x)
+                        y_index = fields.index(y)
+                    i += 1
+                else:
+                    markers.append(ipyleaflet.Marker(location=(row[y_index],row[x_index])))
+            marker_cluster = ipyleaflet.MarkerCluster(markers=markers)
+            self.add_layer(marker_cluster)

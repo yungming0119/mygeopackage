@@ -154,25 +154,34 @@ def ml_tool():
 
     fc = FileChooser(data_dir)
     fc.use_dir_icons = True
-    fc.filter_pattern = ['*.shp', '*.geojson']
+    fc.filter_pattern = ['*.shp', '*.geojson','*.csv']
+    long_text = widgets.Text(description="Longitude")
+    lat_text = widgets.Text(description='Latitude')
+    header_text = widgets.Text(value='True',desciption='Header')
+    csv_area = widgets.HBox([long_text,lat_text,header_text])
 
     button = widgets.Button(description='Read Data')
     def button_click(change):
-        m = folium.Map(zoom_start=15)
-        geo = []
+        if fc.selected[-3:] != 'csv':
+            m = folium.Map(zoom_start=15)
+            geo = []
 
-        if fc.selected is not None:
-            if fc.selected.endswith(".shp"):
-                geo = mygeopackage.Geo(fc.selected,request=False,file_type='shp')
-                #geo.show(map=m)
-            elif fc.selected.endswith(".geojson"):
-                geo = mygeopackage.Geo(fc.selected,request=False)
-                #geo.show(map=m)
-        analysis(m,geo)
-        #display(m)
+            if fc.selected is not None:
+                if fc.selected.endswith(".shp"):
+                    geo = mygeopackage.Geo(fc.selected,request=False,file_type='shp')
+                    #geo.show(map=m)
+                elif fc.selected.endswith(".geojson"):
+                    geo = mygeopackage.Geo(fc.selected,request=False)
+                    #geo.show(map=m)
+            analysis(m,geo)
+            #display(m)
+        else:
+            if header_text.value == 'True':
+                m = mygeopackage.Map(in_csv=fc.selected,x=long_text.value,y=lat_text.value,header=True)
+                display(m)
 
     button.on_click(button_click)     
-    filechooser_widget = widgets.VBox([fc, button])
+    filechooser_widget = widgets.VBox([fc,csv_area, button])
     display(filechooser_widget)
 
 def analysis(m,geo):
