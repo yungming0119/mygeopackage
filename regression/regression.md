@@ -1,0 +1,3 @@
+# regression module
+
+::: mygeopackage.regression
